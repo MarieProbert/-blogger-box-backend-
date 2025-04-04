@@ -17,4 +17,11 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             WHERE post.category.id = :categoryId
     """)
     List<Post> findAllByCategoryId(@Param("categoryId") UUID categoryId);
+
+    @Query("""
+            SELECT post
+            FROM Post post
+            WHERE post.title = :title
+    """)
+    List<Post> findAllByTitle(@Param("title") String title);
 }

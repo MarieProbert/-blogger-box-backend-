@@ -21,8 +21,11 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> getPosts() {
-        return postService.getAll();
+    public List<Post> getPosts(@RequestParam(required = false) String title) {
+        List<Post> posts = title == null || title.isBlank()
+                ? postService.getAll()
+                : postService.getAllByTitle(title);
+        return posts;
     }
 
     @GetMapping("/{id}")

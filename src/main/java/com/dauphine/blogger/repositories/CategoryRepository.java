@@ -15,7 +15,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Query("""
             SELECT cat
             FROM Category cat
-            WHERE cat.name LIKE %:name%
+            WHERE UPPER(cat.name) LIKE UPPER(CONCAT('%', :name, '%'))
     """)
     List<Category> findAllLikeName(@Param("name") String name);
 }

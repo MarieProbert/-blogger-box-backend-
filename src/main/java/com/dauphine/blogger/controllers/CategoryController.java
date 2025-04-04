@@ -15,17 +15,19 @@ import com.dauphine.blogger.services.CategoryService;
 public class CategoryController {
 
     private final CategoryService service;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryService service) {
+    public CategoryController(CategoryService service, CategoryService categoryService) {
         this.service = service;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
     public List<Category> retrieveAllCategories(@RequestParam(required = false) String name) {
-        if (name == null || name.isEmpty()) {
-            return service.getAll();
-        }
-        return service.getByCategoryName(name);
+        List<Category> categories = name == null || name.isBlank()
+                ? categoryService.getAll()
+                : categoryService.getByCategoryName(name);
+        return categories;
     }
 
     @GetMapping("/{id}")
