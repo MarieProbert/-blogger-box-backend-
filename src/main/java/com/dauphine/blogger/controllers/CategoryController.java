@@ -21,8 +21,11 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> retrieveAllCategories() {
-        return service.getAll();
+    public List<Category> retrieveAllCategories(@RequestParam(required = false) String name) {
+        if (name == null || name.isEmpty()) {
+            return service.getAll();
+        }
+        return service.getByCategoryName(name);
     }
 
     @GetMapping("/{id}")

@@ -1,50 +1,47 @@
 package com.dauphine.blogger.controllers;
 
-import com.dauphine.blogger.dto.PostRequest;
 import com.dauphine.blogger.models.Category;
 import com.dauphine.blogger.models.Post;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dauphine.blogger.services.CategoryService;
+import com.dauphine.blogger.services.PostService;
+import com.dauphine.blogger.services.impl.PostServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/posts")
 public class PostController {
+    private final PostServiceImpl postService;
 
-    private final List<Post> temporaryPosts;
-
-    private final CategoryController categoryController;
-
-    @Autowired
-    public PostController(CategoryController categoryController) {
-        temporaryPosts = new ArrayList<>();
-        temporaryPosts.add(new Post(UUID.randomUUID(), "my first post"));
-        temporaryPosts.add(new Post(UUID.randomUUID(), "my second post"));
-        temporaryPosts.add(new Post(UUID.randomUUID(), "my third post"));
-        this.categoryController = categoryController;
+    public PostController(PostServiceImpl postService) {
+        this.postService = postService;
     }
 
     @GetMapping
-    public List<Post> Posts() {
-        return temporaryPosts;
+    public List<Post> getPosts() {
+        return postService.getAll();
     }
 
-    @PostMapping()
-    public Post create(@RequestBody PostRequest postRequest) {
-        Post post = new Post();
-        post.setId(UUID.randomUUID());
-        post.setTitle(postRequest.getTitle());
-        post.setContent(postRequest.getContent());
-        post.setCreatedDate(postRequest.getCreatedDate());
-
-        // Utilisation de la méthode retrieveCategoryById de CategoryController
-        post.setCategory(categoryController.retrieveCategoryById(postRequest.getCategoryId()));
-
-        temporaryPosts.add(post);
-        return post;
+    @GetMapping("/{id}")
+    public Post getPost(@PathVariable UUID id) {
+        return postService.getById(id);
     }
 
+    @PostMapping
+    public void createPost(@RequestBody Post post) {
+        postService.create(post.getTitle(),post.getContent(), post.getCategory().getId());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePost(@PathVariable UUID id) {
+        postService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public void updatePost(@PathVariable UUID id, @RequestBody Post post) {
+        postService.update(id,post.getTitle(),post.getContent());
+    }
 }
