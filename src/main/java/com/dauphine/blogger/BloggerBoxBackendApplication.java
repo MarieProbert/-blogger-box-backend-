@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 @SpringBootApplication
 @OpenAPIDefinition(
 		info = @Info(
-				title = "Blogger bow backend",
+				title = "Blogger box backend",
 				description = "Blogger box endpoints and apis",
 				contact = @Contact(name = "Marie", email="marie.probert@dauphine.eu"),
 				version = "1.0.0"
