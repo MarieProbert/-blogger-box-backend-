@@ -18,4 +18,10 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
             WHERE UPPER(cat.name) LIKE UPPER(CONCAT('%', :name, '%'))
     """)
     List<Category> findAllLikeName(@Param("name") String name);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(cat) > 0 THEN TRUE ELSE FALSE END
+        FROM Category cat WHERE cat.name = :name
+    """)
+    boolean doesNameExist(@Param("name") String name);
 }
